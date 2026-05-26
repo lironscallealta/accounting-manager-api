@@ -4,7 +4,7 @@
  * Rodrigo Callealta
  * Fernando Villalobos
  */
-package cl.duoc.accounting_manager.dto.response;
+package cl.duoc.accounting_manager.dto.response.sales;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

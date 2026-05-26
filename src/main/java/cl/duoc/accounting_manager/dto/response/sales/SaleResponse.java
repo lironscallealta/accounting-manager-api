@@ -4,7 +4,7 @@
  * Rodrigo Callealta
  * Fernando Villalobos
  */
-package cl.duoc.sales.dto.response;
+package cl.duoc.accounting_manager.dto.response.sales;
 
 import java.time.LocalDateTime;
 import java.util.List;
