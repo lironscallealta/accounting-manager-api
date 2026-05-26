@@ -31,3 +31,28 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# info
+infoCommits.md
+
+# --- ARCHIVOS MULTIMEDIA Y PESADOS ---
+# Ignorar formatos de imagen comunes (si no son parte del diseño base)
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.svg
+*.webp
+
+# Ignorar archivos de video y diseño/edición
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.prproj
+*.drp
+
+# Ignorar archivos de audio y plugins
+*.mp3
+*.wav
+*.flac
