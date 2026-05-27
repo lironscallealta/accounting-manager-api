@@ -48,9 +48,9 @@ public class InvoiceClient {
                 .block();
     }
 
-    public InvoiceResponseDto deleteInvoice(Long folio) {
+    public InvoiceResponseDto anularInvoiceByFolio(Long folio) {
         return webClientInvoice
-                .post()
+                .put()
                 .uri("/{folio}/anular", folio)
                 .retrieve()
                 .bodyToMono(InvoiceResponseDto.class)

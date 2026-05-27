@@ -44,6 +44,11 @@ public class AccountingService {
         return response;
     }
 
+    public List<SaleResponse> listarCompras() {
+        log.info("Listando compras desde sales-api");
+        return salesClient.findAllSales();
+    }
+
     public AccountingCreateResponse registrarCompra(AccountingCreateRequest request) {
         log.info("Registrando compra (venta + factura)");
 
@@ -64,6 +69,28 @@ public class AccountingService {
             salesClient.deleteSale(venta.getId());
             throw ex;
         }
+    }
+
+    public AccountingResponse anularCompra(Long saleId) {
+        log.info("Anulando compra id: {}", saleId);
+
+        salesClient.findSale(saleId);
+
+        List<InvoiceResponseDto> todasLasFacturas = invoiceClient.getInvoices();
+        List<InvoiceResponseDto> facturasDeLaVenta = filtrarFacturasPorVenta(todasLasFacturas, saleId);
+
+        for (InvoiceResponseDto factura : facturasDeLaVenta) {
+            if (factura.getFolio() != null && (factura.getAnulada() == null || !factura.getAnulada())) {
+                invoiceClient.anularInvoiceByFolio(factura.getFolio());
+            }
+        }
+
+        salesClient.deleteSale(saleId);
+
+        SaleResponse venta = salesClient.findSale(saleId);
+        List<InvoiceResponseDto> facturasActualizadas = filtrarFacturasPorVenta(invoiceClient.getInvoices(), saleId);
+
+        return mapToAccountingResponse(venta, facturasActualizadas);
     }
 
     private AccountingResponse mapToAccountingResponse(SaleResponse venta, List<InvoiceResponseDto> facturas) {
