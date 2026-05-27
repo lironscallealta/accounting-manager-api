@@ -1,9 +1,14 @@
+/*
+ * Copyright © 2026 DuocUC FullStack 1
+ * Eduardo Bray
+ * Rodrigo Callealta
+ * Fernando Villalobos
+ */
 package cl.duoc.accounting_manager.dto.response;
-
-import java.util.List;
 
 import cl.duoc.accounting_manager.dto.response.invoice.InvoiceResponseDto;
 import cl.duoc.accounting_manager.dto.response.sales.SaleResponse;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

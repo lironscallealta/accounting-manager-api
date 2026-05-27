@@ -1,10 +1,10 @@
+/*
+ * Copyright © 2026 DuocUC FullStack 1
+ * Eduardo Bray
+ * Rodrigo Callealta
+ * Fernando Villalobos
+ */
 package cl.duoc.accounting_manager.service;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
 
 import cl.duoc.accounting_manager.client.InvoiceClient;
 import cl.duoc.accounting_manager.client.SalesClient;
@@ -17,8 +17,12 @@ import cl.duoc.accounting_manager.dto.response.AccountingResponse;
 import cl.duoc.accounting_manager.dto.response.invoice.InvoiceResponseDto;
 import cl.duoc.accounting_manager.dto.response.sales.SaleResponse;
 import cl.duoc.accounting_manager.dto.response.users.UsuarioResponseDto;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -114,8 +118,7 @@ public class AccountingService {
         return facturaRequest;
     }
 
-    private List<InvoiceResponseDto> filtrarFacturasPorVenta(
-            List<InvoiceResponseDto> todasLasFacturas, Long saleId) {
+    private List<InvoiceResponseDto> filtrarFacturasPorVenta(List<InvoiceResponseDto> todasLasFacturas, Long saleId) {
 
         List<InvoiceResponseDto> facturasDeLaVenta = new ArrayList<>();
 

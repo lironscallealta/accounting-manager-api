@@ -1,17 +1,21 @@
+/*
+ * Copyright © 2026 DuocUC FullStack 1
+ * Eduardo Bray
+ * Rodrigo Callealta
+ * Fernando Villalobos
+ */
 package cl.duoc.accounting_manager.dto.request;
-
-import java.time.LocalDate;
-import java.util.List;
 
 import cl.duoc.accounting_manager.dto.request.sales.SaleDetailRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import java.time.LocalDate;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 
 @Data
 @AllArgsConstructor
@@ -44,6 +48,4 @@ public class AccountingCreateRequest {
     private String giroEmisor;
     private String direccionEmisor;
     private String rutEmisor;
-
-    
 }

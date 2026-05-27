@@ -1,7 +1,12 @@
+/*
+ * Copyright © 2026 DuocUC FullStack 1
+ * Eduardo Bray
+ * Rodrigo Callealta
+ * Fernando Villalobos
+ */
 package cl.duoc.accounting_manager.dto.request.invoice;
 
 import java.time.LocalDate;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,5 +30,4 @@ public class InvoiceRequestDto {
     private String giroEmisor;
     private String direccionEmisor;
     private String rutEmisor;
-
 }

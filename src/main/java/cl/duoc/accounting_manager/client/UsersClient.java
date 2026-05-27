@@ -1,11 +1,16 @@
+/*
+ * Copyright © 2026 DuocUC FullStack 1
+ * Eduardo Bray
+ * Rodrigo Callealta
+ * Fernando Villalobos
+ */
 package cl.duoc.accounting_manager.client;
-
-import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import cl.duoc.accounting_manager.dto.response.users.UsuarioResponseDto;
 import cl.duoc.accounting_manager.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -15,7 +20,8 @@ public class UsersClient {
     private final WebClient webClientUsers;
 
     public UsuarioResponseDto findUserById(Long id) {
-        return webClientUsers.get()
+        return webClientUsers
+                .get()
                 .uri("/{id}", id)
                 .retrieve()
                 .onStatus(
