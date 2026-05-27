@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import cl.duoc.accounting_manager.client.InvoiceClient;
 import cl.duoc.accounting_manager.client.SalesClient;
+import cl.duoc.accounting_manager.client.UsersClient;
+import cl.duoc.accounting_manager.dto.response.users.UsuarioResponseDto;
 import cl.duoc.accounting_manager.dto.request.AccountingCreateRequest;
 import cl.duoc.accounting_manager.dto.request.invoice.InvoiceRequestDto;
 import cl.duoc.accounting_manager.dto.request.sales.SaleCreationRequest;
@@ -24,6 +26,7 @@ public class AccountingService {
 
     private final SalesClient salesClient;
     private final InvoiceClient invoiceClient;
+    private final UsersClient usersClient;
 
     public AccountingResponse verCompra(Long saleId) {
         log.info("Consultando compra id: {}", saleId);
@@ -37,6 +40,8 @@ public class AccountingService {
     public AccountingCreateResponse guardarCompra(AccountingCreateRequest request) {
         log.info("Generando compra (venta + factura)");
 
+        validarClienteExiste(request.getCustomerId());
+
         SaleCreationRequest saleRequest = armarSaleCreationRequest(request);
         SaleResponse sale = salesClient.saveSale(saleRequest);
 
@@ -49,6 +54,11 @@ public class AccountingService {
             salesClient.deleteSale(sale.getId());
             throw ex;
         }
+    }
+
+    private void validarClienteExiste(Long customerId) {
+        UsuarioResponseDto cliente = usersClient.findUserById(customerId);
+        log.info("Cliente validado en users-api: {} ({})", cliente.getNombreCompleto(), cliente.getRut());
     }
 
     private SaleCreationRequest armarSaleCreationRequest(AccountingCreateRequest request) {

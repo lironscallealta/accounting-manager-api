@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AccountingCreateRequest {
 
- 
+    // customerId = id del usuario en users-api (se valida antes de crear la venta)
     @NotNull(message = "La venta debe estar asociada a un cliente")
     @Positive(message = "La id del cliente no puede ser negativa")
     private Long customerId;

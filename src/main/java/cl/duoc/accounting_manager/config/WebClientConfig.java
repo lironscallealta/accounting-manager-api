@@ -22,4 +22,12 @@ public class WebClientConfig {
                 .defaultHeader("Content-Type", "application/json") // Agrega un header HTTP por defecto a TODAS las solicitudes
                 .build(); // Construye el objeto final WebClient
     }
+
+    @Bean
+    public WebClient webClientUsers() {
+        return WebClient.builder()
+                .baseUrl("http://localhost:8081/api/v1/users") // microservicio usuarios (customerId de la venta)
+                .defaultHeader("Content-Type", "application/json")
+                .build();
+    }
 }
