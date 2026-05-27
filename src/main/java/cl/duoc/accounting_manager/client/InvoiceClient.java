@@ -33,7 +33,9 @@ public class InvoiceClient {
     }
 
     public InvoiceResponseDto createInvoice(InvoiceRequestDto request) {
-        return webClientInvoice.post().uri("/", request)
+        return webClientInvoice.post()
+                .uri("")
+                .bodyValue(request)
                 .retrieve()
                 .bodyToMono(InvoiceResponseDto.class)
                 .block();
