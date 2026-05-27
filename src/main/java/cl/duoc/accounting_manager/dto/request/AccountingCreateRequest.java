@@ -44,4 +44,6 @@ public class AccountingCreateRequest {
     private String giroEmisor;
     private String direccionEmisor;
     private String rutEmisor;
+
+    
 }
