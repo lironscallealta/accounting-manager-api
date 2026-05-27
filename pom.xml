@@ -10,9 +10,9 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>cl.duoc</groupId>
-	<artifactId>accounting-manager</artifactId>
+	<artifactId>accounting-manager-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>accounting-manager</name>
+	<name>accounting-manager-api</name>
 	<description />
 	<url />
 	<licenses>

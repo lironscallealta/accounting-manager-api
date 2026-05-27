@@ -1,45 +1,53 @@
 # Accounting Manager API
 
-Microservicio orquestador contable. Consume **sales-api** e **invoice-api** vía `WebClient` y expone la lógica unificada del dominio Accounting.
+Microservicio orquestador contable. Consume **users-api**, **sales-api** e **invoice-api** vía `WebClient` y expone casos de uso de **compras**.
+
+Repositorio: [github.com/lironscallealta/accounting-manager-api](https://github.com/lironscallealta/accounting-manager-api)
 
 ## Requisitos
 
 - Java 25
 - Maven 3.9+
-- **sales-api** y **invoice-api** en ejecución (puertos según tu `.env` local)
+- Docker (MySQL del layout)
+- **users-api**, **sales-api** e **invoice-api** en ejecución
 
-## Ejecutar
+## Configuración
 
 ```bash
+cp .env.example .env
+docker compose up -d
 ./mvnw spring-boot:run
 ```
+
+Puerto por defecto: **8086** (ver `.env.example`).
+
+## API (`/api/v1/compras`)
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/v1/health` | Health check |
+| GET | `/api/v1/compras` | Listar compras |
+| GET | `/api/v1/compras/{id}` | Ver compra |
+| POST | `/api/v1/compras` | Registrar compra |
+| PATCH | `/api/v1/compras/{id}/anular` | Anular compra |
+
+Swagger: `http://localhost:8086/swagger-ui.html`
 
 ## Estructura
 
 ```
 src/main/java/cl/duoc/accounting_manager/
-├── client/          # SalesClient, InvoiceClient (WebClient)
-├── config/          # WebClientConfig
-└── dto/             # Request/response alineados con los microservicios remotos
+├── client/       # SalesClient, InvoiceClient, UsersClient
+├── config/       # WebClientConfig
+├── controller/   # CompraController, StatusController
+├── service/      # AccountingService
+├── exception/    # GlobalExceptionHandler
+└── dto/          # Request/response
 ```
 
-## Vincular con GitHub
-
-1. Crea un repositorio **vacío** en GitHub (sin README ni `.gitignore`), por ejemplo: `accounting_manager_api`.
-2. En esta carpeta (`accounting-manager`):
+## Git remoto
 
 ```bash
-git remote add origin https://github.com/TU_USUARIO/accounting_manager_api.git
+git remote set-url origin https://github.com/lironscallealta/accounting-manager-api.git
 git push -u origin dev
 ```
-
-Si ya existe el remoto `origin`, actualízalo:
-
-```bash
-git remote set-url origin https://github.com/TU_USUARIO/accounting_manager_api.git
-git push -u origin dev
-```
-
-## Nota
-
-Este repositorio es **solo** el microservicio `accounting-manager`. No incluye el monorepo `springboot-layout` ni otros APIs del workspace.

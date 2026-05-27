@@ -17,6 +17,7 @@ import cl.duoc.accounting_manager.dto.response.AccountingResponse;
 import cl.duoc.accounting_manager.dto.response.invoice.InvoiceResponseDto;
 import cl.duoc.accounting_manager.dto.response.sales.SaleResponse;
 import cl.duoc.accounting_manager.dto.response.users.UsuarioResponseDto;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -141,6 +142,7 @@ public class AccountingService {
         facturaRequest.setGiroEmisor(request.getGiroEmisor());
         facturaRequest.setDireccionEmisor(request.getDireccionEmisor());
         facturaRequest.setRutEmisor(request.getRutEmisor());
+        facturaRequest.setMontoNeto(BigDecimal.valueOf(request.getAmount()));
 
         return facturaRequest;
     }
