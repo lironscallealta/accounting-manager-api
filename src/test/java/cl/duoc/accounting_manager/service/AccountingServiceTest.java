@@ -9,6 +9,7 @@ package cl.duoc.accounting_manager.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -123,6 +124,48 @@ class AccountingServiceTest {
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("invoice-api");
 
+        verify(salesClient).deleteSale(10L);
+    }
+
+    @Test
+    void anularCompraDebeAnularFacturasYVenta() {
+        InvoiceResponseDto facturaActiva = new InvoiceResponseDto();
+        facturaActiva.setId(20L);
+        facturaActiva.setSaleId(10L);
+        facturaActiva.setFolio(100L);
+        facturaActiva.setAnulada(false);
+
+        SaleResponse ventaAnulada = SaleResponse.builder()
+                .id(10L)
+                .customerId(1L)
+                .amount(15000)
+                .status("DELETED")
+                .build();
+
+        when(salesClient.findSale(10L)).thenReturn(saleResponse, ventaAnulada);
+        when(invoiceClient.getInvoices()).thenReturn(List.of(facturaActiva), List.of(facturaActiva));
+
+        AccountingResponse resultado = accountingService.anularCompra(10L);
+
+        assertThat(resultado.getSale().getId()).isEqualTo(10L);
+        verify(invoiceClient).anularInvoiceByFolio(100L);
+        verify(salesClient).deleteSale(10L);
+    }
+
+    @Test
+    void anularCompraNoDebeAnularFacturaYaAnulada() {
+        InvoiceResponseDto facturaAnulada = new InvoiceResponseDto();
+        facturaAnulada.setId(20L);
+        facturaAnulada.setSaleId(10L);
+        facturaAnulada.setFolio(100L);
+        facturaAnulada.setAnulada(true);
+
+        when(salesClient.findSale(10L)).thenReturn(saleResponse);
+        when(invoiceClient.getInvoices()).thenReturn(List.of(facturaAnulada));
+
+        accountingService.anularCompra(10L);
+
+        verify(invoiceClient, never()).anularInvoiceByFolio(100L);
         verify(salesClient).deleteSale(10L);
     }
 }
