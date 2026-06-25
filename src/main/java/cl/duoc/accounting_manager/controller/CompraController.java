@@ -6,12 +6,18 @@
  */
 package cl.duoc.accounting_manager.controller;
 
+import cl.duoc.accounting_manager.dto.DtoApiError;
 import cl.duoc.accounting_manager.dto.request.AccountingCreateRequest;
 import cl.duoc.accounting_manager.dto.response.AccountingCreateResponse;
 import cl.duoc.accounting_manager.dto.response.AccountingResponse;
 import cl.duoc.accounting_manager.dto.response.sales.SaleResponse;
 import cl.duoc.accounting_manager.service.AccountingService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -36,12 +42,47 @@ public class CompraController {
 
     @GetMapping
     @Operation(summary = "Listar compras", description = "Historial de ventas desde sales-api.")
+    @ApiResponses({
+        @ApiResponse(
+                responseCode = "200",
+                description = "Listado obtenido correctamente",
+                content = @Content(mediaType = "application/json")),
+        @ApiResponse(
+                responseCode = "401",
+                description = "Token JWT ausente o inválido",
+                content = @Content(schema = @Schema(implementation = DtoApiError.class))),
+        @ApiResponse(
+                responseCode = "500",
+                description = "Error interno del servidor",
+                content = @Content(schema = @Schema(implementation = DtoApiError.class)))
+    })
     public ResponseEntity<List<SaleResponse>> listarCompras() {
         return ResponseEntity.ok(accountingService.listarCompras());
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Ver compra", description = "Venta en sales-api y facturas vinculadas en invoice-api.")
+    @ApiResponses({
+        @ApiResponse(
+                responseCode = "200",
+                description = "Compra encontrada",
+                content =
+                        @Content(
+                                mediaType = "application/json",
+                                schema = @Schema(implementation = AccountingResponse.class))),
+        @ApiResponse(
+                responseCode = "404",
+                description = "Compra no encontrada",
+                content = @Content(schema = @Schema(implementation = DtoApiError.class))),
+        @ApiResponse(
+                responseCode = "401",
+                description = "Token JWT ausente o inválido",
+                content = @Content(schema = @Schema(implementation = DtoApiError.class))),
+        @ApiResponse(
+                responseCode = "500",
+                description = "Error interno del servidor",
+                content = @Content(schema = @Schema(implementation = DtoApiError.class)))
+    })
     public ResponseEntity<AccountingResponse> consultarCompraId(@PathVariable Long id) {
         return ResponseEntity.ok(accountingService.consultarCompraId(id));
     }
@@ -50,8 +91,58 @@ public class CompraController {
     @Operation(
             summary = "Registrar compra",
             description = "Crea venta y factura. Si falla la factura, revierte la venta.")
+    @ApiResponses({
+        @ApiResponse(
+                responseCode = "201",
+                description = "Compra registrada correctamente",
+                content =
+                        @Content(
+                                mediaType = "application/json",
+                                schema = @Schema(implementation = AccountingCreateResponse.class))),
+        @ApiResponse(
+                responseCode = "400",
+                description = "Datos de entrada inválidos",
+                content = @Content(schema = @Schema(implementation = DtoApiError.class))),
+        @ApiResponse(
+                responseCode = "401",
+                description = "Token JWT ausente o inválido",
+                content = @Content(schema = @Schema(implementation = DtoApiError.class))),
+        @ApiResponse(
+                responseCode = "500",
+                description = "Error interno del servidor",
+                content = @Content(schema = @Schema(implementation = DtoApiError.class)))
+    })
     public ResponseEntity<AccountingCreateResponse> registrarCompra(
-            @Valid @RequestBody AccountingCreateRequest request) {
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                            description = "Datos de la venta y factura a orquestar",
+                            required = true,
+                            content =
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = AccountingCreateRequest.class),
+                                            examples = @ExampleObject(name = "Ejemplo de compra", value = """
+                                                                    {
+                                                                      "customerId": 1,
+                                                                      "amount": 15000,
+                                                                      "details": [
+                                                                        {
+                                                                          "description": "Alimento premium",
+                                                                          "sku": "SKU-001",
+                                                                          "quantity": 2,
+                                                                          "unitPrice": 7500
+                                                                        }
+                                                                      ],
+                                                                      "fecha": "2026-06-21",
+                                                                      "folio": "BOL-001",
+                                                                      "razonSocialReceptor": "Cliente Demo SpA",
+                                                                      "rutReceptor": "12345678-9",
+                                                                      "razonSocialEmisor": "VetDistribuidora SpA",
+                                                                      "rutEmisor": "87654321-K"
+                                                                    }
+                                                                    """)))
+                    @Valid
+                    @RequestBody
+                    AccountingCreateRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(accountingService.registrarCompra(request));
     }
 
@@ -59,6 +150,27 @@ public class CompraController {
     @Operation(
             summary = "Anular compra",
             description = "Anulación lógica: venta (soft delete) y factura(s) asociada(s).")
+    @ApiResponses({
+        @ApiResponse(
+                responseCode = "200",
+                description = "Compra anulada correctamente",
+                content =
+                        @Content(
+                                mediaType = "application/json",
+                                schema = @Schema(implementation = AccountingResponse.class))),
+        @ApiResponse(
+                responseCode = "404",
+                description = "Compra no encontrada",
+                content = @Content(schema = @Schema(implementation = DtoApiError.class))),
+        @ApiResponse(
+                responseCode = "401",
+                description = "Token JWT ausente o inválido",
+                content = @Content(schema = @Schema(implementation = DtoApiError.class))),
+        @ApiResponse(
+                responseCode = "500",
+                description = "Error interno del servidor",
+                content = @Content(schema = @Schema(implementation = DtoApiError.class)))
+    })
     public ResponseEntity<AccountingResponse> anularCompra(@PathVariable Long id) {
         return ResponseEntity.ok(accountingService.anularCompra(id));
     }
