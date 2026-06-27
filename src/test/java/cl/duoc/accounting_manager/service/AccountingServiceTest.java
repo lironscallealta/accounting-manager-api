@@ -15,14 +15,12 @@ import static org.mockito.Mockito.when;
 
 import cl.duoc.accounting_manager.client.InvoiceClient;
 import cl.duoc.accounting_manager.client.SalesClient;
-import cl.duoc.accounting_manager.client.UsersClient;
 import cl.duoc.accounting_manager.dto.request.AccountingCreateRequest;
 import cl.duoc.accounting_manager.dto.request.sales.SaleDetailRequest;
 import cl.duoc.accounting_manager.dto.response.AccountingCreateResponse;
 import cl.duoc.accounting_manager.dto.response.AccountingResponse;
 import cl.duoc.accounting_manager.dto.response.invoice.InvoiceResponseDto;
 import cl.duoc.accounting_manager.dto.response.sales.SaleResponse;
-import cl.duoc.accounting_manager.dto.response.users.UsuarioResponseDto;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,9 +37,6 @@ class AccountingServiceTest {
 
     @Mock
     private InvoiceClient invoiceClient;
-
-    @Mock
-    private UsersClient usersClient;
 
     @InjectMocks
     private AccountingService accountingService;
@@ -72,17 +67,6 @@ class AccountingServiceTest {
     }
 
     @Test
-    void listarComprasDebeDelegarEnSalesClient() {
-        when(salesClient.findAllSales()).thenReturn(List.of(saleResponse));
-
-        List<SaleResponse> resultado = accountingService.listarCompras();
-
-        assertThat(resultado).hasSize(1);
-        assertThat(resultado.get(0).getId()).isEqualTo(10L);
-        verify(salesClient).findAllSales();
-    }
-
-    @Test
     void consultarCompraIdDebeRetornarVentaYFacturas() {
         when(salesClient.findSale(10L)).thenReturn(saleResponse);
         when(invoiceClient.getInvoices()).thenReturn(List.of(invoiceResponse));
@@ -95,10 +79,6 @@ class AccountingServiceTest {
 
     @Test
     void registrarCompraDebeCrearVentaYFactura() {
-        UsuarioResponseDto cliente =
-                new UsuarioResponseDto(1L, "Cliente Demo", "12345678-9", "demo@mail.cl", 30, null, null, true);
-
-        when(usersClient.findUserById(1L)).thenReturn(cliente);
         when(salesClient.saveSale(any())).thenReturn(saleResponse);
         when(invoiceClient.createInvoice(any())).thenReturn(invoiceResponse);
 
@@ -106,17 +86,12 @@ class AccountingServiceTest {
 
         assertThat(resultado.getSale().getId()).isEqualTo(10L);
         assertThat(resultado.getInvoice().getFolio()).isEqualTo(100L);
-        verify(usersClient).findUserById(1L);
         verify(salesClient).saveSale(any());
         verify(invoiceClient).createInvoice(any());
     }
 
     @Test
     void registrarCompraDebeRevertirVentaCuandoFacturaFalla() {
-        UsuarioResponseDto cliente =
-                new UsuarioResponseDto(1L, "Cliente Demo", "12345678-9", "demo@mail.cl", 30, null, null, true);
-
-        when(usersClient.findUserById(1L)).thenReturn(cliente);
         when(salesClient.saveSale(any())).thenReturn(saleResponse);
         when(invoiceClient.createInvoice(any())).thenThrow(new RuntimeException("Error en invoice-api"));
 

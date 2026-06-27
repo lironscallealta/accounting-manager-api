@@ -57,17 +57,6 @@ class CompraControllerTest {
     private JwtAuthFilter jwtAuthFilter;
 
     @Test
-    void listarComprasDebeRetornar200() throws Exception {
-        SaleResponse sale =
-                SaleResponse.builder().id(1L).customerId(1L).amount(10000).build();
-        when(accountingService.listarCompras()).thenReturn(List.of(sale));
-
-        mockMvc.perform(get("/api/v1/compras"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1));
-    }
-
-    @Test
     void consultarCompraIdDebeRetornar200() throws Exception {
         SaleResponse sale =
                 SaleResponse.builder().id(5L).customerId(1L).amount(10000).build();
