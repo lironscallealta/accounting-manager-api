@@ -10,7 +10,6 @@ import cl.duoc.accounting_manager.dto.DtoApiError;
 import cl.duoc.accounting_manager.dto.request.AccountingCreateRequest;
 import cl.duoc.accounting_manager.dto.response.AccountingCreateResponse;
 import cl.duoc.accounting_manager.dto.response.AccountingResponse;
-import cl.duoc.accounting_manager.dto.response.sales.SaleResponse;
 import cl.duoc.accounting_manager.service.AccountingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,7 +19,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,26 +37,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class CompraController {
 
     private final AccountingService accountingService;
-
-    @GetMapping
-    @Operation(summary = "Listar compras", description = "Historial de ventas desde sales-api.")
-    @ApiResponses({
-        @ApiResponse(
-                responseCode = "200",
-                description = "Listado obtenido correctamente",
-                content = @Content(mediaType = "application/json")),
-        @ApiResponse(
-                responseCode = "401",
-                description = "Token JWT ausente o inválido",
-                content = @Content(schema = @Schema(implementation = DtoApiError.class))),
-        @ApiResponse(
-                responseCode = "500",
-                description = "Error interno del servidor",
-                content = @Content(schema = @Schema(implementation = DtoApiError.class)))
-    })
-    public ResponseEntity<List<SaleResponse>> listarCompras() {
-        return ResponseEntity.ok(accountingService.listarCompras());
-    }
 
     @GetMapping("/{id}")
     @Operation(summary = "Ver compra", description = "Venta en sales-api y facturas vinculadas en invoice-api.")

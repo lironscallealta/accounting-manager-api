@@ -8,7 +8,6 @@ package cl.duoc.accounting_manager.service;
 
 import cl.duoc.accounting_manager.client.InvoiceClient;
 import cl.duoc.accounting_manager.client.SalesClient;
-import cl.duoc.accounting_manager.client.UsersClient;
 import cl.duoc.accounting_manager.dto.request.AccountingCreateRequest;
 import cl.duoc.accounting_manager.dto.request.invoice.InvoiceRequestDto;
 import cl.duoc.accounting_manager.dto.request.sales.SaleCreationRequest;
@@ -16,7 +15,6 @@ import cl.duoc.accounting_manager.dto.response.AccountingCreateResponse;
 import cl.duoc.accounting_manager.dto.response.AccountingResponse;
 import cl.duoc.accounting_manager.dto.response.invoice.InvoiceResponseDto;
 import cl.duoc.accounting_manager.dto.response.sales.SaleResponse;
-import cl.duoc.accounting_manager.dto.response.users.UsuarioResponseDto;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -32,7 +30,6 @@ public class AccountingService {
 
     private final SalesClient salesClient;
     private final InvoiceClient invoiceClient;
-    private final UsersClient usersClient;
 
     public AccountingResponse consultarCompraId(Long saleId) {
         log.info("Consultando compra por id: {}", saleId);
@@ -45,16 +42,8 @@ public class AccountingService {
         return response;
     }
 
-    public List<SaleResponse> listarCompras() {
-        log.info("Listando compras desde sales-api");
-        return salesClient.findAllSales();
-    }
-
     public AccountingCreateResponse registrarCompra(AccountingCreateRequest request) {
         log.info("Registrando compra (venta + factura)");
-
-        UsuarioResponseDto cliente = usersClient.findUserById(request.getCustomerId());
-        log.info("Cliente validado en users-api: {} ({})", cliente.getNombreCompleto(), cliente.getRut());
 
         SaleCreationRequest ventaRequest = mapToSaleCreationRequest(request);
         SaleResponse venta = salesClient.saveSale(ventaRequest);
